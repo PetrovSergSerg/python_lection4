@@ -25,6 +25,7 @@ class GroupHelper:
         assert len(checkbox_list) > 0
 
         checkbox = checkbox_list[randint(0, len(checkbox_list) - 1)]
+        group_id = checkbox.get_attribute("value")
         checkbox.click()
 
         wd.find_element_by_name("edit").click()
@@ -33,6 +34,8 @@ class GroupHelper:
 
         wd.find_element_by_name("update").click()
         self.return_to_groups_page()
+
+        return group_id
 
     def delete_any_group(self):
         wd = self.app.wd
@@ -46,6 +49,18 @@ class GroupHelper:
 
         wd.find_element_by_name("delete").click()
         self.return_to_groups_page()
+
+    def get_group_list(self):
+        wd = self.app.wd
+        self.menu.groups()
+        groups = []
+
+        for elem in wd.find_elements_by_css_selector("span.group"):
+            group_id = elem.find_element_by_name("selected[]").get_attribute("value")
+            name = elem.text
+            groups.append(Group(id=group_id, name=name))
+
+        return groups
 
     def fill(self, group):
         self.type_in_field("group_name", group.name)

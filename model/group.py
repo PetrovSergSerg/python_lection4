@@ -6,7 +6,8 @@ alphabet = string.ascii_letters
 
 
 class Group:
-    def __init__(self, name=None, header=None, footer=None):
+    def __init__(self, id=None, name=None, header=None, footer=None):
+        self.id = id
         self.name = name
         self.header = header
         self.footer = footer
@@ -14,6 +15,7 @@ class Group:
     def set_empty_parameters(self):
         for name, value in self.__dict__.items():
             setattr(self, name, '')
+        self.id = None
         return self
 
     def set_random_parameters_to_random_value(self):
@@ -30,3 +32,21 @@ class Group:
         self.header = utils.get_random_word(alphabet + ' ', randint(10, 20))
         self.footer = utils.get_random_word(alphabet + ' ', randint(10, 20))
         return self
+
+    def __eq__(self, other):
+        return (self.id is None
+                or other.id is None
+                or self.id == other.id) \
+               and self.name == other.name
+
+    def __repr__(self):
+        return f'Group({self.id}, name=\"{self.name}\")'
+
+    def __lt__(self, other):
+        # None >> any integer
+        # self.id = None => return False (left bigger)
+        # other.id is None => return True (right is bigger)
+        # else compare int(self.id) <> int(onter.id), because type(Group.id) = str, but it's a number!
+        return self.id is not None \
+               and (other.id is None
+                    or int(self.id) < int(other.id))
