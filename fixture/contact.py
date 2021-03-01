@@ -135,6 +135,7 @@ class ContactHelper:
             WebDriverWait(wd, 1).until(EC.alert_is_present(), 'Не дождались алёрта')
             alert = wd.switch_to.alert
             alert.accept()
+            wd.find_element_by_css_selector("div.msgbox")
         except TimeoutException:
             print("no alert")
         finally:
