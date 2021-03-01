@@ -38,6 +38,27 @@ class ContactHelper:
 
         self.menu.home()
 
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.menu.home()
+        contacts = []
+
+        for elem in wd.find_elements_by_xpath("//tr[@name='entry']"):
+            contact_id = elem.find_element_by_name("selected[]").get_attribute("value")
+            lastname = elem.find_element_by_xpath("./td[2]").text
+            firstname = elem.find_element_by_xpath("./td[3]").text
+            address = elem.find_element_by_xpath("./td[4]").text
+            emails = elem.find_element_by_xpath("./td[5]").text
+            phones = elem.find_element_by_xpath("./td[6]").text
+            contacts.append(Contact(id=contact_id,
+                                    lastname=lastname,
+                                    firstname=firstname,
+                                    address=address,
+                                    emails=emails,
+                                    phones=phones))
+
+        return contacts
+
     def fill_contact(self, contact):
         self.type_in_field("firstname", contact.firstname)
         self.type_in_field("middlename", contact.middlename)

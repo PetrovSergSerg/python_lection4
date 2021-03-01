@@ -46,7 +46,7 @@ class Group:
         # None >> any integer
         # self.id = None => return False (left bigger)
         # other.id is None => return True (right is bigger)
-        # else compare int(self.id) <> int(onter.id), because type(Group.id) = str, but it's a number!
+        # else compare int(self.id) <> int(other.id), because type(Group.id) = str, but it's a number!
         return self.id is not None \
                and (other.id is None
                     or int(self.id) < int(other.id))

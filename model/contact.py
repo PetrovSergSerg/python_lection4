@@ -8,10 +8,12 @@ numbers = string.digits
 
 
 class Contact:
-    def __init__(self, lastname=None, firstname=None, middlename=None, nickname=None,
+    def __init__(self, id=None, lastname=None, firstname=None, middlename=None, nickname=None,
                  title=None, company=None, address=None, phone_home=None, mobile=None, phone_work=None, fax=None,
-                 email_main=None, email_secondary=None, email_other=None, homepage=None, byear=None, bmonth=None, bday=None,
-                 ayear=None, amonth=None, aday=None, address_secondary=None, phone_secondary=None, notes=None):
+                 email_main=None, email_secondary=None, email_other=None, homepage=None,
+                 byear=None, bmonth=None, bday=None, ayear=None, amonth=None, aday=None,
+                 address_secondary=None, phone_secondary=None, notes=None, emails=None, phones=None):
+        self.id = id
         self.lastname = lastname
         self.firstname = firstname
         self.middlename = middlename
@@ -36,6 +38,24 @@ class Contact:
         self.address_secondary = address_secondary
         self.phone_secondary = phone_secondary
         self.notes = notes
+        self.emails = emails if emails is not None else self.calculate_emails()
+        self.phones = phones if phones is not None else self.calculate_phones()
+
+    def calculate_emails(self):
+        # get list of emails for field in contact_list
+        emails = [self.email_main, self.email_secondary, self.email_other]
+        # filter this list by extracting all not-None elements
+        emails = list(filter(lambda x: x is not None and x != "", emails))
+        # and get string of list splitting all elements by "\n"
+        return "" if len(emails) == 0 else "\n".join(emails)
+
+    def calculate_phones(self):
+        # get list of phones for field in contact_list
+        phones = [self.phone_home, self.mobile, self.phone_work, self.phone_secondary]
+        # filter this list by extracting all not-None elements
+        phones = list(filter(lambda x: x is not None and x != "", phones))
+        # and get string of list splitting all elements by "\n"
+        return "" if len(phones) == 0 else "\n".join(phones)
 
     def set_empty_parameters(self):
         for name, value in self.__dict__.items():
@@ -43,6 +63,8 @@ class Contact:
                 setattr(self, name, '-')
             else:
                 setattr(self, name, '')
+        self.id = None
+
         return self
 
     def set_random_parameters_to_random_value(self):
@@ -115,6 +137,8 @@ class Contact:
             self.phone_secondary = '' if randint(0, 2) < 2 else '+7495' + utils.get_random_word(numbers, 7)
         if bool(getrandbits(1)):
             self.notes = '' if bool(getrandbits(1)) else utils.get_random_word(alphabet + ' ', randint(10, 20))
+        self.emails = self.calculate_emails()
+        self.phones = self.calculate_phones()
 
         return self
 
@@ -154,4 +178,31 @@ class Contact:
         self.phone_secondary = '' if randint(0, 2) < 2 else '+7495' + utils.get_random_word(numbers, 7)
         self.notes = '' if bool(getrandbits(1)) else utils.get_random_word(alphabet + ' ', randint(10, 20))
 
+        self.emails = self.calculate_emails()
+        self.phones = self.calculate_phones()
+
         return self
+
+    def __eq__(self, other):
+        return (self.id is None
+                or other.id is None
+                or self.id == other.id) \
+               and self.lastname == other.lastname \
+               and self.firstname == other.firstname \
+               and self.address == other.address \
+               and self.emails == other.emails \
+               and self.phones == other.phones
+
+    def __repr__(self):
+        fio = [self.lastname, self.firstname]
+        return f'Contact({self.id}, FIO=\"{" ".join(filter(lambda x: x != "", fio))}\", ' \
+               f'ADDRESS=\"{self.address}\", EMAILS=\"{self.emails}\", PHONES=\"{self.phones}\")'
+
+    def __lt__(self, other):
+        # None >> any integer
+        # self.id = None => return False (left bigger)
+        # other.id is None => return True (right is bigger)
+        # else compare int(self.id) <> int(other.id), because type(Group.id) = str, but it's a number!
+        return self.id is not None \
+               and (other.id is None
+                    or int(self.id) < int(other.id))
