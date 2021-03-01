@@ -18,7 +18,7 @@ def test_delete_any_contact_from_list(app):
 
 def test_delete_any_contact_from_itself(app):
     if app.contact.count() == 0:
-        contact = Contact(lastname='first', firstname='contact')
+        contact = Contact().set_all_parameters_to_random_value()
         app.contact.create(contact)
     old_contacts = app.contact.get_contact_list()
     app.contact.delete_any_contact_from_itself()

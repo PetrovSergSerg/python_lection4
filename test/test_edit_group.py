@@ -11,11 +11,13 @@ def test_edit_any_group(app):
     # get id of randomly chosen group
     group_id = app.group.edit_any_group(group_new_state)
 
-    # next(iterator, None) returns first group by condition or None if no group found
-    # But we got this group_id, so group exists! And we will not get None
-    # so we can get field "name" of Not None Object
-    # change "name" of edited group on new_state.value
-    next((group for group in old_groups if group.id == group_id), None).name = group_new_state.name
+    # next(iterator, None) returns first group by condition or None if no element found
+    # but we already got its id, so element exists! And we will not get None
+    # so we can replace old group by new_state with new id is set
+    edited_group = next((group for group in old_groups if group.id == group_id), None)
+    index = old_groups.index(edited_group)
+    group_new_state.id = group_id
+    old_groups[index] = group_new_state
 
     # get new list
     new_groups = app.group.get_group_list()
