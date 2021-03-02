@@ -19,11 +19,12 @@ def test_edit_any_group(app):
     group_new_state.id = group_id
     old_groups[index] = group_new_state
 
-    # get new list
-    new_groups = app.group.get_group_list()
-
     # check len of list was not changed
-    assert len(new_groups) == len(old_groups)
+    assert app.group.count() == len(old_groups)
+
+    # if new list length is correct, then we can compare lists.
+    # so we can get new list
+    new_groups = app.group.get_group_list()
 
     # check equalizing of sorted lists
     assert new_groups.sort() == old_groups.sort()
