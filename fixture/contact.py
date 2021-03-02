@@ -21,6 +21,8 @@ class ContactHelper:
 
         self.menu.home()
 
+        self.contact_cache = None
+
     def edit_any_contact(self, contact: Contact):
         wd = self.app.wd
         self.menu.home()
@@ -41,28 +43,33 @@ class ContactHelper:
 
         self.menu.home()
 
+        self.contact_cache = None
+
         return contact_id
 
+    contact_cache = None
+
     def get_contact_list(self):
-        wd = self.app.wd
-        self.menu.home()
-        contacts = []
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.menu.home()
+            self.contact_cache = []
 
-        for elem in wd.find_elements_by_xpath("//tr[@name='entry']"):
-            contact_id = elem.find_element_by_name("selected[]").get_attribute("value")
-            lastname = elem.find_element_by_xpath("./td[2]").text
-            firstname = elem.find_element_by_xpath("./td[3]").text
-            address = elem.find_element_by_xpath("./td[4]").text
-            emails = elem.find_element_by_xpath("./td[5]").text
-            phones = elem.find_element_by_xpath("./td[6]").text
-            contacts.append(Contact(id=contact_id,
-                                    lastname=lastname,
-                                    firstname=firstname,
-                                    address=address,
-                                    emails=emails,
-                                    phones=phones))
+            for elem in wd.find_elements_by_xpath("//tr[@name='entry']"):
+                contact_id = elem.find_element_by_name("selected[]").get_attribute("value")
+                lastname = elem.find_element_by_xpath("./td[2]").text
+                firstname = elem.find_element_by_xpath("./td[3]").text
+                address = elem.find_element_by_xpath("./td[4]").text
+                emails = elem.find_element_by_xpath("./td[5]").text
+                phones = elem.find_element_by_xpath("./td[6]").text
+                self.contact_cache.append(Contact(id=contact_id,
+                                                  lastname=lastname,
+                                                  firstname=firstname,
+                                                  address=address,
+                                                  emails=emails,
+                                                  phones=phones))
 
-        return contacts
+        return self.contact_cache
 
     def fill_contact(self, contact):
         self.type_in_field("firstname", contact.firstname)
@@ -123,6 +130,8 @@ class ContactHelper:
 
         self.menu.home()
 
+        self.contact_cache = None
+
     def delete_any_contact_form_list(self):
         wd = self.app.wd
         self.menu.home()
@@ -145,6 +154,8 @@ class ContactHelper:
             print("no alert")
         finally:
             self.menu.home()
+
+            self.contact_cache = None
 
     def count(self):
         wd = self.app.wd

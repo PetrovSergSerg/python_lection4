@@ -17,11 +17,12 @@ def test_edit_any_contact_from_list_to_random_parameters(app):
     contact_new_state.id = contact_id
     old_contacts[index] = contact_new_state
 
-    # get new list
-    new_contacts = app.contact.get_contact_list()
-
     # check len of list was not changed
-    assert len(new_contacts) == len(old_contacts)
+    assert app.contact.count() == len(old_contacts)
+
+    # if new list length is correct, then we can compare lists.
+    # so we can get new list
+    new_contacts = app.contact.get_contact_list()
 
     # check equalizing of sorted lists
     assert new_contacts.sort() == old_contacts.sort()
@@ -48,11 +49,12 @@ def test_edit_any_contact_from_list_to_handled_parameters(app):
     contact_new_state.id = contact_id
     old_contacts[index] = contact_new_state
 
-    # get new list
-    new_contacts = app.contact.get_contact_list()
-
     # check len of list was not changed
-    assert len(new_contacts) == len(old_contacts)
+    assert app.contact.count() == len(old_contacts)
+
+    # if new list length is correct, then we can compare lists.
+    # so we can get new list
+    new_contacts = app.contact.get_contact_list()
 
     # check equalizing of sorted lists
     assert new_contacts.sort() == old_contacts.sort()

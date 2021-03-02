@@ -5,10 +5,13 @@ def test_add_empty_contact(app):
     old_contacts = app.contact.get_contact_list()
     contact = Contact().set_empty_parameters()  # generate empty contact
     app.contact.create(contact)
-    new_contacts = app.contact.get_contact_list()
 
     # new list is longer, because we added 1 element
-    assert len(new_contacts) == len(old_contacts) + 1
+    assert app.contact.count() == len(old_contacts) + 1
+
+    # if new list length is correct, then we can compare lists.
+    # so we can get new list
+    new_contacts = app.contact.get_contact_list()
 
     # make sure that all elements of OLD list are in NEW list
     assert all(elem in new_contacts for elem in old_contacts)
@@ -30,10 +33,13 @@ def test_add_handled_contact(app):
                       byear='1994', bmonth='April', bday='15', ayear='2003', amonth='September', aday='4',
                       address_secondary='xxx', phone_secondary='777', notes='zzz')
     app.contact.create(contact)
-    new_contacts = app.contact.get_contact_list()
 
     # new list is longer, because we added 1 element
-    assert len(new_contacts) == len(old_contacts) + 1
+    assert app.contact.count() == len(old_contacts) + 1
+
+    # if new list length is correct, then we can compare lists.
+    # so we can get new list
+    new_contacts = app.contact.get_contact_list()
 
     # make sure that all elements of OLD list are in NEW list
     # for elem in old_contacts:
@@ -53,10 +59,13 @@ def test_add_random_contact(app):
     old_contacts = app.contact.get_contact_list()
     contact = Contact().set_all_parameters_to_random_value()  # generate fully random contact
     app.contact.create(contact)
-    new_contacts = app.contact.get_contact_list()
 
     # new list is longer, because we added 1 element
-    assert len(new_contacts) == len(old_contacts) + 1
+    assert app.contact.count() == len(old_contacts) + 1
+
+    # if new list length is correct, then we can compare lists.
+    # so we can get new list
+    new_contacts = app.contact.get_contact_list()
 
     # make sure that all elements of OLD list are in NEW list
     assert all(elem in new_contacts for elem in old_contacts)
