@@ -36,7 +36,6 @@ class GroupHelper:
 
         wd.find_element_by_name("update").click()
         self.return_to_groups_page()
-
         self.group_cache = None
 
         return group_id
@@ -49,12 +48,14 @@ class GroupHelper:
         assert len(checkbox_list) > 0
 
         checkbox = checkbox_list[randint(0, len(checkbox_list) - 1)]
+        group_id = checkbox.get_attribute("value")
         checkbox.click()
 
         wd.find_element_by_name("delete").click()
         self.return_to_groups_page()
-
         self.group_cache = None
+
+        return group_id
 
     group_cache = None
 

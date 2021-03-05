@@ -119,28 +119,35 @@ class ContactHelper:
         wd = self.app.wd
         self.menu.home()
 
-        edit_list = wd.find_elements_by_xpath("//img[@title='Edit']")
-        assert len(edit_list) > 0
+        entry_list = wd.find_elements_by_xpath("//tr[@name='entry']")
+        assert len(entry_list) > 0
 
-        edit = edit_list[randint(0, len(edit_list) - 1)]
+        entry = entry_list[randint(0, len(entry_list) - 1)]
+
+        contact_id = entry.find_element_by_name("selected[]").get_attribute("value")
+        edit = entry.find_element_by_xpath(".//img[@title='Edit']")
         edit.click()
 
         delete = wd.find_element_by_xpath("//input[@type='submit'][@value='Delete']")
         delete.click()
 
         self.menu.home()
-
         self.contact_cache = None
+
+        return contact_id
 
     def delete_any_contact_form_list(self):
         wd = self.app.wd
         self.menu.home()
 
-        checkbox_list = wd.find_elements_by_name("selected[]")
-        assert len(checkbox_list) > 0
+        entry_list = wd.find_elements_by_xpath("//tr[@name='entry']")
+        assert len(entry_list) > 0
 
-        checkbox_last = checkbox_list[len(checkbox_list) - 1]
-        checkbox_last.click()
+        entry = entry_list[randint(0, len(entry_list) - 1)]
+        contact_id = entry.find_element_by_name("selected[]").get_attribute("value")
+
+        checkbox = entry.find_element_by_name("selected[]")
+        checkbox.click()
 
         delete = wd.find_element_by_xpath("//input[@type='button'][@value='Delete']")
         delete.click()
@@ -154,8 +161,9 @@ class ContactHelper:
             print("no alert")
         finally:
             self.menu.home()
-
             self.contact_cache = None
+
+            return contact_id
 
     def count(self):
         wd = self.app.wd

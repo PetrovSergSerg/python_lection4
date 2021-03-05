@@ -11,6 +11,9 @@ def test_edit_any_group(app):
     # get id of randomly chosen group
     group_id = app.group.edit_any_group(group_new_state)
 
+    # check len of list was not changed
+    assert app.group.count() == len(old_groups)
+
     # next(iterator, None) returns first group by condition or None if no element found
     # but we already got its id, so element exists! And we will not get None
     # so we can replace old group by new_state with new id is set
@@ -18,9 +21,6 @@ def test_edit_any_group(app):
     index = old_groups.index(edited_group)
     group_new_state.id = group_id
     old_groups[index] = group_new_state
-
-    # check len of list was not changed
-    assert app.group.count() == len(old_groups)
 
     # if new list length is correct, then we can compare lists.
     # so we can get new list
